@@ -16,6 +16,7 @@ from wordcloud import WordCloud
 import jieba
 import numpy as np
 from PIL import Image
+from PyQt5.QtGui import QFont
 
 
 class MainWindow(QWidget):
@@ -40,6 +41,9 @@ class MainWindow(QWidget):
         hbox1 = QHBoxLayout()
         for i in range(6):
             btn = QPushButton(button_list[i])
+            self.font = QFont('微软雅黑', 12, QFont.Bold)
+            btn.setFont(self.font)
+            btn.setStyleSheet("QPushButton { color: #000000;background-color: #ffffff; }")
             if button_list[i] == "选择文本":
                 btn.clicked.connect(self.openTextFile)
             elif button_list[i] == "选择停用词":
@@ -53,23 +57,31 @@ class MainWindow(QWidget):
             else:
                 btn.clicked.connect(self.save_wordcloud_image)
             hbox1.addWidget(btn)
+        self.font_type.setStyleSheet(
+            "QComboBox { color: #ffffff;background-color: #ffffff; } QComboBox QAbstractItemView {  background-color: white; } ")
+        self.font_type.setFont(self.font)
         hbox1.addWidget(self.font_type)
         vbox.addLayout(hbox1)
 
         # 第二部分：一个按钮
         btn_single = QPushButton('更新词云图')
+        btn_single.setFont(self.font)
+        btn_single.setStyleSheet("QPushButton { color: #000000;background-color: #ffffff; }")
         btn_single.clicked.connect(self.update_wordcloud)  # 连接点击事件
         vbox.addWidget(btn_single)
 
         # 第三部分：matplotlib绘制的折线图（假设MatplotlibCanvas已定义）
         self.fig = Figure(figsize=(8, 8), dpi=100)
         self.axes = self.fig.add_subplot(111)
+        self.axes.axis("off")
         self.canvas = FigureCanvas(self.fig)
         vbox.addWidget(self.canvas)  # 将画布添加到布局中
         # 设置窗口属性
         self.setLayout(vbox)
-        self.setWindowTitle('词云图生成器V1.0')
-        self.setGeometry(500, 300, 800, 640)
+        self.setWindowTitle('词云图生成器V2.0')
+        self.setGeometry(500, 100, 1200, 840)
+        # 格式设置
+        self.setStyleSheet("background-color: #000000;")
         self.show()
 
     def open_mask_img(self):
