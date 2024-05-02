@@ -92,11 +92,8 @@ class MainWindow(QWidget):
             self.mask_shape = np.array(Image.open(fileName))
 
     def save_wordcloud_image(self):
-        options = QFileDialog.Options()
-        options |= QFileDialog.DontUseNativeDialog
         fileName, _ = QFileDialog.getSaveFileName(self, "保存词云图", "",
-                                                  "PNG Files (*.png);;JPG Files (*.jpg);;All Files (*)",
-                                                  options=options)
+                                                  "PNG Files (*.png);;JPG Files (*.jpg);;All Files (*)")
         if fileName:
             self.fig.savefig(fileName, dpi=100, bbox_inches='tight')
             print(f"词云图已保存为 {fileName}")
