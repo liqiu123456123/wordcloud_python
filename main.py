@@ -25,6 +25,7 @@ class MainWindow(QWidget):
         self.color_code = None
         self.mask_shape = None
         self.ch_font = None
+        self.stop_words = None
         self.initUI()
 
     def initUI(self):
@@ -78,7 +79,7 @@ class MainWindow(QWidget):
         vbox.addWidget(self.canvas)  # 将画布添加到布局中
         # 设置窗口属性
         self.setLayout(vbox)
-        self.setWindowTitle('词云图生成器V2.0')
+        self.setWindowTitle('词云图生成器V1.0')
         self.setGeometry(500, 100, 1200, 840)
         # 格式设置
         self.setStyleSheet("background-color: #000000;")
@@ -116,7 +117,7 @@ class MainWindow(QWidget):
         print(self.color_code)
         wordcloud = WordCloud(width=800, height=800,
                               background_color=self.color_code if self.color_code is not None else "white", \
-                              stopwords=None, font_path=self.ch_font if self.ch_font is not None else 'msyh.ttc',
+                              stopwords=self.stop_words if self.stop_words is not None else None, font_path=self.ch_font if self.ch_font is not None else 'msyh.ttc',
                               mask=self.mask_shape if self.mask_shape is not None else None).generate(
             words)
 
@@ -141,8 +142,7 @@ class MainWindow(QWidget):
         file_path, _ = QFileDialog.getOpenFileName(self, "选择停用词文件", "", "Text Files (*.txt)")
         # 这里添加处理文件路径的逻辑
         with open(file_path, 'r', encoding='utf-8') as f:
-            stopwords = set(f.read().splitlines())
-        print(stopwords)
+            self.stop_words = set(f.read().splitlines())
 
     def selectBackgroundColor(self):
         """打开颜色选择器，选择背景颜色"""
