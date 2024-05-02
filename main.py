@@ -86,11 +86,8 @@ class MainWindow(QWidget):
         self.show()
 
     def open_mask_img(self):
-        options = QFileDialog.Options()
-        options |= QFileDialog.DontUseNativeDialog
         fileName, _ = QFileDialog.getOpenFileName(self, "选择词云图形状", "",
-                                                  "Image Files (*.png *.xpm *.jpg *.jpeg)",
-                                                  options=options)
+                                                  "Image Files (*.png *.xpm *.jpg *.jpeg)")
         if fileName:
             self.mask_shape = np.array(Image.open(fileName))
 
