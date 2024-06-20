@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QFileDialog, QColorDialog, \
-    QComboBox, QScrollArea, QLabel
+    QScrollArea, QLabel
 from PyQt5.QtCore import Qt  # 导入 QtCore.Qt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
@@ -17,23 +17,18 @@ class MainWindow(QWidget):
         super().__init__()
         self.color_code = None
         self.mask_shape = None
-        self.ch_font = None
+        self.ch_font = 'msyh.ttc'  # 默认字体
         self.stop_words = None
         self.texts = []
         self.initUI()
 
     def initUI(self):
-        self.font_dict = {'楷体': 'simkai.ttf', '隶书': 'SIMLI.TTF', '宋体': 'simsun.ttc', '黑体': 'simhei.ttf',
-                          '微软雅黑': 'msyh.ttc'}
         # 创建布局
         vbox = QVBoxLayout()
-        # 第一部分：横向排列的按钮和组合框
-        button_list = ["选择文本", "选择停用词", "选择背景颜色", "导出词云图", "选择词云图形状", "选择字体"]
-        self.font_type = QComboBox(self)
-        for key in self.font_dict:
-            self.font_type.addItem(key)
+        # 第一部分：横向排列的按钮
+        button_list = ["选择文本", "选择停用词", "选择背景颜色", "导出词云图", "选择词云图形状"]
         hbox1 = QHBoxLayout()
-        for i in range(6):
+        for i in range(len(button_list)):
             btn = QPushButton(button_list[i])
             self.font = QFont('微软雅黑', 12, QFont.Bold)
             btn.setFont(self.font)
@@ -51,10 +46,6 @@ class MainWindow(QWidget):
             else:
                 btn.clicked.connect(self.save_wordcloud_image)
             hbox1.addWidget(btn)
-        self.font_type.setStyleSheet(
-            "QComboBox { color: #E0E0E0; background-color: #333333; } QComboBox QAbstractItemView { background-color: #333333; } ")
-        self.font_type.setFont(self.font)
-        hbox1.addWidget(self.font_type)
         vbox.addLayout(hbox1)
 
         # 第二部分：一个按钮
@@ -103,16 +94,13 @@ class MainWindow(QWidget):
             if widget is not None:
                 widget.setParent(None)
 
-        selected_text = self.font_type.currentText()
-        self.ch_font = self.font_dict[selected_text]
-
         for text in self.texts:
             word_list = jieba.cut(text, cut_all=False)
             words = " ".join(word_list)
             wordcloud = WordCloud(width=800, height=800,
                                   background_color=self.color_code if self.color_code is not None else "#FFFFFF",
                                   stopwords=self.stop_words if self.stop_words is not None else None,
-                                  font_path=self.ch_font if self.ch_font is not None else 'msyh.ttc',
+                                  font_path=self.ch_font,
                                   mask=self.mask_shape if self.mask_shape is not None else None).generate(words)
 
             fig = Figure(figsize=(8, 8), dpi=100)
