@@ -86,7 +86,7 @@ class MainWindow(QWidget):
         hbox1.addWidget(line)
 
         # 第二部分：图片按钮
-        update_button = ButtonImage('更新词云图', '确定.png')
+        update_button = ButtonImage('更新词云图', '云更新.png')
         update_button.setFont(self.font)
         update_button.clicked.connect(self.update_wordclouds)  # 连接点击事件
         hbox1.addWidget(update_button)
