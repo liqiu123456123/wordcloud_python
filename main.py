@@ -1,12 +1,3 @@
-"""
-楷体：simkai.ttf
-隶书：SIMLI.TTF
-宋体:simsun.ttc
-黑体：simhei.ttf
-微软雅黑：msyh.ttc
-
-
-"""
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QSizePolicy, QFileDialog, \
     QColorDialog, QComboBox
@@ -44,7 +35,7 @@ class MainWindow(QWidget):
             btn = QPushButton(button_list[i])
             self.font = QFont('微软雅黑', 12, QFont.Bold)
             btn.setFont(self.font)
-            btn.setStyleSheet("QPushButton { color: #000000;background-color: #ffffff; }")
+            btn.setStyleSheet("QPushButton { color: #E0E0E0; background-color: #333333; }")
             if button_list[i] == "选择文本":
                 btn.clicked.connect(self.openTextFile)
             elif button_list[i] == "选择停用词":
@@ -59,7 +50,7 @@ class MainWindow(QWidget):
                 btn.clicked.connect(self.save_wordcloud_image)
             hbox1.addWidget(btn)
         self.font_type.setStyleSheet(
-            "QComboBox { color: #ffffff;background-color: #ffffff; } QComboBox QAbstractItemView {  background-color: white; } ")
+            "QComboBox { color: #E0E0E0; background-color: #333333; } QComboBox QAbstractItemView { background-color: #333333; } ")
         self.font_type.setFont(self.font)
         hbox1.addWidget(self.font_type)
         vbox.addLayout(hbox1)
@@ -67,7 +58,7 @@ class MainWindow(QWidget):
         # 第二部分：一个按钮
         btn_single = QPushButton('更新词云图')
         btn_single.setFont(self.font)
-        btn_single.setStyleSheet("QPushButton { color: #000000;background-color: #ffffff; }")
+        btn_single.setStyleSheet("QPushButton { color: #E0E0E0; background-color: #333333; }")
         btn_single.clicked.connect(self.update_wordcloud)  # 连接点击事件
         vbox.addWidget(btn_single)
 
@@ -82,7 +73,7 @@ class MainWindow(QWidget):
         self.setWindowTitle('词云图生成器V2.0')
         self.setGeometry(500, 100, 1200, 840)
         # 格式设置
-        self.setStyleSheet("background-color: #000000;")
+        self.setStyleSheet("background-color: #2E4053;")
         self.show()
 
     def open_mask_img(self):
@@ -108,9 +99,8 @@ class MainWindow(QWidget):
         words = " ".join(word_list)
         # 设置matplotlib使用支持中文的字体
         # 创建WordCloud对象并生成词云图
-        print(self.color_code)
         wordcloud = WordCloud(width=800, height=800,
-                              background_color=self.color_code if self.color_code is not None else "white", \
+                              background_color=self.color_code if self.color_code is not None else "#AEB6BF", \
                               stopwords=self.stop_words if self.stop_words is not None else None, font_path=self.ch_font if self.ch_font is not None else 'msyh.ttc',
                               mask=self.mask_shape if self.mask_shape is not None else None).generate(
             words)
