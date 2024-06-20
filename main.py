@@ -70,7 +70,7 @@ class MainWindow(QWidget):
         vbox.addWidget(self.canvas)  # 将画布添加到布局中
         # 设置窗口属性
         self.setLayout(vbox)
-        self.setWindowTitle('词云图生成器V2.0')
+        self.setWindowTitle('基于Python开发的批量词云图生成系统')
         self.setGeometry(500, 100, 1200, 840)
         # 格式设置
         self.setStyleSheet("background-color: #2E4053;")
