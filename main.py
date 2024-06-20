@@ -21,8 +21,10 @@ class ButtonImage(QPushButton):
         self.setFixedSize(150, 150)
         # 使用内部布局
         self.layout = QVBoxLayout(self)
+        self.layout.setContentsMargins(0, 0, 0, 0)  # 设置边距为0
+        self.layout.setAlignment(Qt.AlignCenter)  # 设置布局居中对齐
         # 设置标签居中
-        alignment = Qt.AlignHCenter | Qt.AlignVCenter
+        alignment = Qt.AlignCenter
         # 创建并设置名称标签
         self.name_label = QLabel(name_label)
         self.name_label.setAlignment(alignment)
@@ -53,8 +55,8 @@ class MainWindow(QWidget):
         vbox = QVBoxLayout()
         # 第一部分：横向排列的按钮
         button_list = [
-            ("选择文本", "选择文本.png"),
-            ("选择停用词", "选择停用词.png"),
+            ("批量导入文本", "选择文本.png"),
+            ("导入停用词", "选择停用词.png"),
             ("选择背景颜色", "选择背景颜色.png"),
             ("导出词云图", "词云图.png"),
             ("选择词云图形状", "词云图形状.png")
@@ -64,9 +66,9 @@ class MainWindow(QWidget):
             btn = ButtonImage(name_label, image_url)
             self.font = QFont('微软雅黑', 12, QFont.Bold)
             btn.setFont(self.font)
-            if name_label == "选择文本":
+            if name_label == "批量导入文本":
                 btn.clicked.connect(self.openTextFiles)
-            elif name_label == "选择停用词":
+            elif name_label == "导入停用词":
                 btn.clicked.connect(self.openStopWordsFile)
             elif name_label == "选择背景颜色":
                 btn.setObjectName("选择背景颜色")
