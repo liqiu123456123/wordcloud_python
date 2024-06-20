@@ -1,6 +1,6 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QFileDialog, QColorDialog, \
-    QScrollArea, QLabel
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QFileDialog, QColorDialog, \
+    QScrollArea, QLabel, QPushButton, QFrame
 from PyQt5.QtCore import Qt  # 导入 QtCore.Qt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
@@ -10,6 +10,32 @@ import numpy as np
 from PIL import Image
 from PyQt5.QtGui import QFont, QPixmap
 import os
+
+
+class ButtonImage(QPushButton):
+    def __init__(self, name_label, image_url, parent=None):
+        super().__init__(parent)
+        self.initUI(name_label, image_url)
+
+    def initUI(self, name_label, image_url):
+        self.setFixedSize(150, 150)
+        # 使用内部布局
+        self.layout = QVBoxLayout(self)
+        # 设置标签居中
+        alignment = Qt.AlignHCenter | Qt.AlignVCenter
+        # 创建并设置名称标签
+        self.name_label = QLabel(name_label)
+        self.name_label.setAlignment(alignment)
+        self.name_label.setStyleSheet("color: #E0E0E0;")  # 标签文本颜色
+        # 创建并设置图片标签
+        self.image_label = QLabel()
+        pixmap = QPixmap(image_url)
+        self.image_label.setPixmap(pixmap.scaled(100, 100, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        self.image_label.setAlignment(alignment)
+        # 将标签添加到布局中
+        self.layout.addWidget(self.image_label)
+        self.layout.addWidget(self.name_label)
+        self.setStyleSheet("background-color: #333333;")  # 按钮背景颜色
 
 
 class MainWindow(QWidget):
@@ -26,34 +52,46 @@ class MainWindow(QWidget):
         # 创建布局
         vbox = QVBoxLayout()
         # 第一部分：横向排列的按钮
-        button_list = ["选择文本", "选择停用词", "选择背景颜色", "导出词云图", "选择词云图形状"]
+        button_list = [
+            ("选择文本", "选择文本.png"),
+            ("选择停用词", "选择停用词.png"),
+            ("选择背景颜色", "选择背景颜色.png"),
+            ("导出词云图", "词云图.png"),
+            ("选择词云图形状", "词云图形状.png")
+        ]
         hbox1 = QHBoxLayout()
-        for i in range(len(button_list)):
-            btn = QPushButton(button_list[i])
+        for name_label, image_url in button_list:
+            btn = ButtonImage(name_label, image_url)
             self.font = QFont('微软雅黑', 12, QFont.Bold)
             btn.setFont(self.font)
-            btn.setStyleSheet("QPushButton { color: #E0E0E0; background-color: #333333; }")
-            if button_list[i] == "选择文本":
+            if name_label == "选择文本":
                 btn.clicked.connect(self.openTextFiles)
-            elif button_list[i] == "选择停用词":
+            elif name_label == "选择停用词":
                 btn.clicked.connect(self.openStopWordsFile)
-            elif button_list[i] == "选择背景颜色":
+            elif name_label == "选择背景颜色":
                 btn.setObjectName("选择背景颜色")
                 btn.clicked.connect(self.selectBackgroundColor)
-            elif button_list[i] == "选择词云图形状":
+            elif name_label == "选择词云图形状":
                 btn.setObjectName("选择词云图形状")
                 btn.clicked.connect(self.open_mask_img)
             else:
                 btn.clicked.connect(self.save_wordcloud_image)
             hbox1.addWidget(btn)
-        vbox.addLayout(hbox1)
 
-        # 第二部分：一个按钮
-        btn_single = QPushButton('更新词云图')
-        btn_single.setFont(self.font)
-        btn_single.setStyleSheet("QPushButton { color: #E0E0E0; background-color: #333333; }")
-        btn_single.clicked.connect(self.update_wordclouds)  # 连接点击事件
-        vbox.addWidget(btn_single)
+        # 添加竖线分隔符
+        line = QFrame()
+        line.setFrameShape(QFrame.VLine)
+        line.setFrameShadow(QFrame.Sunken)
+        line.setStyleSheet("color: #FFFFFF;")  # 设置分隔线颜色为白色
+        hbox1.addWidget(line)
+
+        # 第二部分：图片按钮
+        update_button = ButtonImage('更新词云图', '确定.png')
+        update_button.setFont(self.font)
+        update_button.clicked.connect(self.update_wordclouds)  # 连接点击事件
+        hbox1.addWidget(update_button)
+
+        vbox.addLayout(hbox1)
 
         # 第三部分：滚动区域，用于显示多个词云图
         self.scroll_area = QScrollArea()
